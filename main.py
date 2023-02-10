@@ -24,10 +24,10 @@ def startmenu():  # Главное меню
                        "2. Поиск.\n"
                        "3. Показать всё\n"
                        "4. Выйти\n"))
-    choosemenu(choice)
+    chooseMenu(choice)
 
 
-def choosemenu(choice):  # Метод проверяющий выбор пользователя
+def chooseMenu(choice):  # Метод проверяющий выбор пользователя
     userEnter = choice
     if userEnter == 1:
         createnewnote()
