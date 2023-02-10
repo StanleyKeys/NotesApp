@@ -113,6 +113,9 @@ def searchMenu():  # Меню поиска
         findByTitle()
     elif userEnter == 2:
         startmenu()
+    else:
+        print('Нужно выбрать пункт меню')
+        searchMenu()
 
 
 def findByDate():  # Поиск по дате
@@ -136,7 +139,7 @@ def findByTitle():  # Поиск по заголовку
             print(f"\nДата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
             temp = item
         else:
-            print('Заметки с такой датой не существует')
+            print('Заметки с таким заголовком не существует')
 
     subMenu(temp)
 
