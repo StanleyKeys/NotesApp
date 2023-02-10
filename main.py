@@ -48,11 +48,16 @@ def createDBlist():
         datb = file.read()
         dbList = json.loads(datb)
 
-
+def checkDate():
+    currentDatetime = datetime.now()
+    month = currentDatetime.month
+    if month < 10:
+        month = f'0{month}'
+    currentDate = f'{currentDatetime.day}.{month}.{currentDatetime.year}'
+    return currentDate
 def createnewnote():
     print("Создание заметки.\n")
-    currentDatetime = datetime.now()
-    currentDate = f'{currentDatetime.day}.{currentDatetime.month}.{currentDatetime.year}'
+    currentDate = checkDate()
     noteTitle = input("Введите заголовок заметки: ")
     noteBody = input("Введите тело заметки: ")
     data = {'Date': currentDate, 'Title': noteTitle, 'NoteBody': noteBody}
@@ -63,11 +68,22 @@ def createnewnote():
     print("Заметка успешно сохранена")
 
 
-def changeNote():
-    pass
+def changeNote(tempDict):
+    newList = []
+    currentDate = checkDate()
+    noteTitle = input("Введите заголовок заметки: ")
+    noteBody = input("Введите тело заметки: ")
+    data = {'Date': currentDate, 'Title': noteTitle, 'NoteBody': noteBody}
+    for item in dbList:
+        if item == tempDict:
+            newList.append(data)
+        else:
+            newList.append(item)
+    with open("db.json", "w") as file:
+        json.dump(newList, file, indent=2, ensure_ascii=False)
+    print("Заметка успешно изменена")
 
-
-def delNote():
+def delNote(tempList):
     pass
 
 
@@ -85,25 +101,29 @@ def searchMenu():
 
 
 def findByDate():
+    temp = {}
     userEnter = input('Введите дату формата day.month.year')
     for item in dbList:
         if item['Date'] == userEnter:
             print(f"\nДата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
+            temp = item
         else:
             print('Заметки с такой датой не существует')
 
-    subMenu()
+    subMenu(temp)
 
 
 def findByTitle():
-    userEnter = input('Введите дату формата day.month.year')
+    userEnter = input('Введите заголовок заметки: ')
+    temp = {}
     for item in dbList:
-        if item['Date'] == userEnter:
+        if item['Title'] == userEnter:
             print(f"\nДата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
+            temp = item
         else:
             print('Заметки с такой датой не существует')
 
-    subMenu()
+    subMenu(temp)
 
 
 def showallNotes():
@@ -112,17 +132,22 @@ def showallNotes():
     startmenu()
 
 
-def subMenu():
+def subMenu(temp):
     userEnter = int(input('Что делаем дальше?\n'
                           '1. Изменить\n'
                           '2. Удалить\n'
-                          '3. В главное меню\n'))
+                          '3. В главное меню\n'
+                          '4. Выйти\n'))
     if userEnter == 1:
-        pass
+        changeNote(temp)
     elif userEnter == 2:
-        pass
+        delNote(temp)
     elif userEnter == 3:
         startmenu()
+    elif userEnter == 4:
+        sys.exit()
+    else:
+        print('Нужно выбрать пункт меню')
 
 
 startmenu()
