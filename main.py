@@ -119,53 +119,88 @@ def searchMenu():  # Меню поиска
 
 
 def findByDate():  # Поиск по дате
-    temp = {}
-    userEnter = input('Введите дату формата day.month.year')
+    tempList = []
+    userEnter = input('Введите дату в формате день.месяц.год:  ')
+    dateList = userEnter.split(".")
+    if len(dateList) != 3:
+        print('Дата введена неверно. Попробуйте еще раз.\n')
+        findByDate()
+    else:
+        pass
+
+    id = 1
     for item in dbList:
+
         if item['Date'] == userEnter:
-            print(f"\nДата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
-            temp = item
+            print(f"Заметка № {id}")
+            print(f"Дата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
+            tempList.append(item)
+            id += 1
         else:
             print('Заметки с такой датой не существует')
 
-    subMenu(temp)
+    subMenu(tempList)
 
 
 def findByTitle():  # Поиск по заголовку
     userEnter = input('Введите заголовок заметки: ')
-    temp = {}
+    tempList = []
+    id = 1
     for item in dbList:
+
         if item['Title'] == userEnter:
-            print(f"\nДата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
-            temp = item
+            print(f"Заметка № {id}")
+            print(f"Дата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
+            tempList.append(item)
+            id += 1
         else:
             print('Заметки с таким заголовком не существует')
 
-    subMenu(temp)
+    subMenu(tempList)
 
 
 def showallNotes():  # Метод, показывающий весь список заметок
+    id = 1
     for item in dbList:
-        print(f"\nДата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
+        print(f"Заметка № {id}")
+        print(f"Дата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
+        id += 1
     startmenu()
 
 
-def subMenu(temp):  # Под-меню, после выполненных функций
+def subMenu(tempList):  # Под-меню, после выполненных функций
     userEnter = int(input('Что делаем дальше?\n'
                           '1. Изменить\n'
                           '2. Удалить\n'
                           '3. В главное меню\n'
                           '4. Выйти\n'))
     if userEnter == 1:
-        changeNote(temp)
+        if len(tempList) == 1:
+            changeNote(tempList[0])
+        else:
+            changeMenu(tempList)
     elif userEnter == 2:
-        delNote(temp)
+        if len(tempList) == 1:
+            delNote(tempList[0])
+        else:
+            delMenu(tempList)
+
     elif userEnter == 3:
         startmenu()
     elif userEnter == 4:
         sys.exit()
     else:
         print('Нужно выбрать пункт меню')
+
+
+def changeMenu(tempList):  # Под-меню для изменения (в случае если заметок несколько)
+    userNumber = int(input('Найдено несколько заметок. Какую заметку меняем?\n'))
+    changeNote(tempList[userNumber])
+
+
+def delMenu(tempList):  # Под-меню для удаления (в случае если заметок несколько)
+    userNumber = int(input('Найдено несколько заметок. Какую заметку удаляем?\n'))
+    delNote(tempList[userNumber])
 
 
 startmenu()
