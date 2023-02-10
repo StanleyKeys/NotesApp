@@ -17,7 +17,7 @@ def checkDB():
 print("Добро пожаловать в заметки!\n")
 
 
-def startmenu():
+def startmenu():  # Главное меню
     checkDB()
     choice = int(input("Выберите действие\n"
                        "1. Создать.\n"
@@ -27,7 +27,7 @@ def startmenu():
     choosemenu(choice)
 
 
-def choosemenu(choice):
+def choosemenu(choice):  # Метод проверяющий выбор пользователя
     userEnter = choice
     if userEnter == 1:
         createnewnote()
@@ -42,20 +42,23 @@ def choosemenu(choice):
         startmenu()
 
 
-def createDBlist():
+def createDBlist():  # Создаем список из файла db.json
     global dbList
     with open("db.json", "r") as file:
         datb = file.read()
         dbList = json.loads(datb)
 
-def checkDate():
+
+def checkDate():  # Проверяем дату.
     currentDatetime = datetime.now()
     month = currentDatetime.month
     if month < 10:
         month = f'0{month}'
     currentDate = f'{currentDatetime.day}.{month}.{currentDatetime.year}'
     return currentDate
-def createnewnote():
+
+
+def createnewnote():  # Метод создания заметки
     print("Создание заметки.\n")
     currentDate = checkDate()
     noteTitle = input("Введите заголовок заметки: ")
@@ -65,10 +68,11 @@ def createnewnote():
     loadjson.append(data)
     with open("db.json", "w") as file:
         json.dump(loadjson, file, indent=2, ensure_ascii=False)
-    print("Заметка успешно сохранена")
+    print("Заметка успешно сохранена\n")
+    startmenu()
 
 
-def changeNote(tempDict):
+def changeNote(tempDict):  # Метод изменения заметки
     newList = []
     currentDate = checkDate()
     noteTitle = input("Введите заголовок заметки: ")
@@ -81,26 +85,37 @@ def changeNote(tempDict):
             newList.append(item)
     with open("db.json", "w") as file:
         json.dump(newList, file, indent=2, ensure_ascii=False)
-    print("Заметка успешно изменена")
-
-def delNote(tempList):
-    pass
+    print("Заметка успешно изменена\n")
+    startmenu()
 
 
-def searchMenu():
+def delNote(tempDict):  # Метод удаления заметки
+    newList = []
+    for item in dbList:
+        if item == tempDict:
+            pass
+        else:
+            newList.append(item)
+    with open("db.json", "w") as file:
+        json.dump(newList, file, indent=2, ensure_ascii=False)
+    print("Заметка успешно удалена\n")
+    startmenu()
+
+
+def searchMenu():  # Меню поиска
     userEnter = int(input('Выберите критерии для поиска:\n'
                           '1. По дате\n'
                           '2. По заголовку\n'
                           '3. В главное меню\n'))
     if userEnter == 1:
         findByDate()
-    if userEnter == 2:
+    elif userEnter == 2:
         findByTitle()
-    if userEnter == 2:
+    elif userEnter == 2:
         startmenu()
 
 
-def findByDate():
+def findByDate():  # Поиск по дате
     temp = {}
     userEnter = input('Введите дату формата day.month.year')
     for item in dbList:
@@ -113,7 +128,7 @@ def findByDate():
     subMenu(temp)
 
 
-def findByTitle():
+def findByTitle():  # Поиск по заголовку
     userEnter = input('Введите заголовок заметки: ')
     temp = {}
     for item in dbList:
@@ -126,13 +141,13 @@ def findByTitle():
     subMenu(temp)
 
 
-def showallNotes():
+def showallNotes():  # Метод, показывающий весь список заметок
     for item in dbList:
         print(f"\nДата: {item['Date']}\nЗаголовок: {item['Title']}\nТекст: {item['NoteBody']}\n")
     startmenu()
 
 
-def subMenu(temp):
+def subMenu(temp):  # Под-меню, после выполненных функций
     userEnter = int(input('Что делаем дальше?\n'
                           '1. Изменить\n'
                           '2. Удалить\n'
